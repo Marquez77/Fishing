@@ -8,7 +8,7 @@ import net.minecraft.server.v1_12_R1.PacketPlayInSteerVehicle;
 
 public class VehicleControlEvent extends PlayerEvent{
 	
-	public static final HandlerList handlers;
+	public static HandlerList handlers;
 	private PacketPlayInSteerVehicle packet;
 	
 	static {
@@ -17,6 +17,7 @@ public class VehicleControlEvent extends PlayerEvent{
 
 	public VehicleControlEvent(Player who, PacketPlayInSteerVehicle packet) {
 		super(who);
+		this.packet = packet;
 	}
 
 	@Override
@@ -24,7 +25,7 @@ public class VehicleControlEvent extends PlayerEvent{
 		return VehicleControlEvent.handlers;
 	}
 	
-	public HandlerList getHandlerList() {
+	public static HandlerList getHandlerList() {
 		return VehicleControlEvent.handlers;
 	}
 	

@@ -25,10 +25,12 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.events.PacketListener;
+import com.marquez.fishing.cmds.FPCmd;
 import com.marquez.fishing.enums.MessageEnum;
 import com.marquez.fishing.events.VehicleControlEvent;
 import com.marquez.fishing.listeners.DropListener;
 import com.marquez.fishing.listeners.FishingListener;
+import com.marquez.fishing.listeners.NPCInteractListener;
 import com.marquez.fishing.util.ItemAPI;
 import com.marquez.fishing.util.SoundEffect;
 
@@ -77,7 +79,9 @@ public class FishingPlugin extends JavaPlugin{
 	@Override
 	public void onEnable() {
 		instance = this;
+		getCommand("fihsing").setExecutor(new FPCmd());
 		File folder = new File(getDataFolder(), "players/");
+		if(!folder.exists()) folder.mkdirs();
 		for(File file : folder.listFiles()) {
 			try {
 				BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -90,6 +94,7 @@ public class FishingPlugin extends JavaPlugin{
 		}
 		getServer().getPluginManager().registerEvents(new DropListener(), this);
 		getServer().getPluginManager().registerEvents(new FishingListener(), this);
+		getServer().getPluginManager().registerEvents(new NPCInteractListener(), this);
 		ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
 		PacketListener packetListener = new PacketAdapter(this, ListenerPriority.NORMAL, new PacketType[] { PacketType.Play.Client.STEER_VEHICLE }) {
 			@Override
@@ -140,7 +145,7 @@ public class FishingPlugin extends JavaPlugin{
 		int[] default_counts = new int[] { 4, 5, 6, 7 }; 
 		for(int i = 1; i < 5; i++) {
 			int type = (int)getValue(config, "Item." + i + ".Type", 293);
-			short durability = (short)getValue(config, "Item." + i + ".Durability", (short)i);
+			int durability = (int)getValue(config, "Item." + i + ".Durability", (int)i);
 			String name = ChatColor.translateAlternateColorCodes('&', (String)getValue(config, "Item." + i + ".Name", names[i-1]));
 			List<String> loreArray = (List<String>)getValueList(config, "Item.Lore", itemLores[i-1]);
 			String[] lores = new String[loreArray.size()];

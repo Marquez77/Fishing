@@ -11,10 +11,10 @@ public class ItemAPI {
 	
 	
 	@SuppressWarnings("deprecation")
-	public static ItemStack makeItem(int type, int amount, int data, short durability, String display, String... lores) {
+	public static ItemStack makeItem(int type, int amount, int data, int durability, String display, String... lores) {
 		ItemStack item = new ItemStack(type, amount);
 		item.getData().setData((byte)data);
-		item.setDurability(durability);
+		item.setDurability((short)durability);
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(display);
 		meta.setLore(Arrays.asList(lores));

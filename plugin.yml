@@ -5,3 +5,4 @@ author: Marquez77
 commands:
   fishing:
     description: The fishing plugin's default command.
+depend: [ProtocolLib, Citizens]

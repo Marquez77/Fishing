@@ -40,7 +40,7 @@ public class FishingListener implements Listener{
 				player.sendTitle(MessageEnum.event_Fishing_Snake.getMessage(), "", 10, 20, 10);
 				FishingPlugin.FishingSnake.playSound(player);
 				delay = 10L;
-			}
+			}else if(index > 3) return;
 			Entity hook = e.getHook();
 			ArmorStand armorstand = (ArmorStand)hook.getWorld().spawnEntity(hook.getLocation(), EntityType.ARMOR_STAND);
 			armorstand.setHelmet(FishingPlugin.items[index]);
@@ -84,6 +84,23 @@ public class FishingListener implements Listener{
 									FishingPlugin.instance.addCount(player);
 									FishingPlugin.FishingSuccess.playSound(player);
 									player.sendMessage(MessageEnum.event_Fishing_Success.getMessage());
+									if(index == 3) {
+										new Thread() {
+											public void run() {
+												for(String cmd : FishingPlugin.successCommands) {
+													if(cmd.startsWith("delay!")) {
+														int delay = Integer.parseInt(cmd.replace("delay!", "").replace(" ", ""));
+														try {
+															Thread.sleep(delay*1000);
+														} catch (InterruptedException e) {
+															e.printStackTrace();
+														}
+													}
+													Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("[playername]", player.getName()));
+												}
+											}
+										}.start();
+									}
 								}else if(game.failed) {
 									try {
 										Thread.sleep(500);
@@ -144,17 +161,17 @@ public class FishingListener implements Listener{
 			}
 		}
 	}
-
-	public class Game {
+	
+	class Game {
 		String[] word;
 		int now;
 		boolean failed;
 
-		public Game(int length) {
+		Game(int length) {
 			word = new String[length];
 			now = 0;
 			failed = false;
 		}
 	}
-
+	
 }

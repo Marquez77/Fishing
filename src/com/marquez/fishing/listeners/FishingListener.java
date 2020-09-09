@@ -34,6 +34,7 @@ public class FishingListener implements Listener{
 		}
 		if(e.getState() == State.CAUGHT_ENTITY || e.getState() == State.CAUGHT_FISH) {
 			e.setCancelled(true);
+			if(process.containsKey(player)) return;
 			String uuid = player.getUniqueId().toString();
 			int index = FishingPlugin.quests.get(uuid);
 			long delay = 0L;
@@ -73,7 +74,7 @@ public class FishingListener implements Listener{
 									sb.append("§7").append(game.word[i]).append(" ");
 								}
 								sb.setLength(sb.length()-1);
-								player.sendTitle(MessageEnum.event_Fishing_Title.getMessage().replace("%words%", sb.toString()), "", 0, 20, 0);
+								player.sendTitle(MessageEnum.event_Fishing_Title.getMessage().replace("%words%", sb.toString()), "", 0, 10, 0);
 								if(game.now == game.word.length) {
 									try {
 										Thread.sleep(500);

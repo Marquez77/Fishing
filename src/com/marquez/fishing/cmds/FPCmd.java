@@ -39,7 +39,8 @@ public class FPCmd implements CommandExecutor{
 					sender.sendMessage(MessageEnum.command_Fishing_Start_AlreadyStarted.getMessage());
 					break;
 				}
-				FishingPlugin.quests.put(target.getUniqueId().toString(), 0);
+				FishingPlugin.quests.put(target.getUniqueId().toString(), -1);
+				FishingPlugin.instance.addCount(target);
 				target.getInventory().addItem(FishingPlugin.item);
 				new Thread() {
 					public void run() {

@@ -63,6 +63,8 @@ public class FishingPlugin extends JavaPlugin{
 		try {
 			if(!quests.containsKey(uuid)) {
 				quests.put(uuid, 0);
+			}
+			if(!file.exists()) {
 				file.createNewFile();
 			}
 			int count = quests.get(uuid)+1;

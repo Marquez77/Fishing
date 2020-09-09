@@ -18,6 +18,9 @@ public class NPCInteractListener implements Listener{
 			Player player = e.getClicker();
 			String uuid = player.getUniqueId().toString();
 			if(FishingPlugin.quests.containsKey(uuid) && FishingPlugin.quests.get(uuid) == 4) {
+				FishingPlugin.instance.addCount(player);
+				player.getInventory().removeItem(FishingPlugin.item);
+				player.getInventory().removeItem(FishingPlugin.items);
 				new Thread() {
 					public void run() {
 						for(String cmd : FishingPlugin.endCommands) {

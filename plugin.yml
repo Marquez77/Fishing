@@ -1,0 +1,7 @@
+name: Fishing
+version: 1.0.0
+main: com.marquez.fishing.FishingPlugin
+author: Marquez77
+commands:
+  fishing:
+    description: The fishing plugin's default command.

@@ -1,5 +1,6 @@
 package com.marquez.fishing.listeners;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -27,7 +28,7 @@ public class FishingListener implements Listener{
 	@EventHandler
 	public void onFishing(PlayerFishEvent e) {
 		Player player = e.getPlayer();
-		if(!FishingPlugin.quests.containsKey(player.getUniqueId().toString()) || player.getPassengers() == null || !(player.getPassengers().get(0) instanceof ArmorStand)) {
+		if(!FishingPlugin.quests.containsKey(player.getUniqueId().toString()) || player.getVehicle() == null || !(player.getVehicle() instanceof ArmorStand)) {
 			e.setCancelled(true);
 			return;
 		}
@@ -65,11 +66,11 @@ public class FishingListener implements Listener{
 								StringBuilder sb = new StringBuilder();
 								for(int i = 0; i < game.now; i++) {
 									if(game.failed && i == game.now-1) {
-										sb.append("§c").append(words[i]).append(" ");
-									}else sb.append("§a").append(words[i]).append(" ");
+										sb.append("§c").append(game.word[i]).append(" ");
+									}else sb.append("§a").append(game.word[i]).append(" ");
 								}
 								for(int i = game.now; i < game.word.length; i++) {
-									sb.append("§7").append(words[i]).append(" ");
+									sb.append("§7").append(game.word[i]).append(" ");
 								}
 								sb.setLength(sb.length()-1);
 								player.sendTitle(MessageEnum.event_Fishing_Title.getMessage().replace("%words%", sb.toString()), "", 0, 20, 0);
@@ -125,12 +126,13 @@ public class FishingListener implements Listener{
 						public void run() {
 							long start = System.currentTimeMillis();
 							double now, max = FishingPlugin.timeouts[index]*1000;
-							BossBar bar = Bukkit.createBossBar(MessageEnum.bossbar_Fishing.getMessage().replace("%Remain_Time%", max+""), BarColor.GREEN, BarStyle.SOLID);
+							BossBar bar = Bukkit.createBossBar(MessageEnum.bossbar_Fishing.getMessage().replace("%Remain_Time%", max/1000+""), BarColor.GREEN, BarStyle.SOLID);
 							bar.setProgress(1);
+							bar.removeAll();
 							bar.addPlayer(player);
 							bar.setVisible(true);
 							while((now = System.currentTimeMillis() - start) <= max && process.containsKey(player)) {
-								bar.setTitle(MessageEnum.bossbar_Fishing.getMessage().replace("%Remain_Time%", (max-now)+""));
+								bar.setTitle(MessageEnum.bossbar_Fishing.getMessage().replace("%Remain_Time%", new DecimalFormat("0.#").format((max-now)/1000)+""));
 								bar.setProgress((max-now)/max);
 								try {
 									Thread.sleep(1);
@@ -138,7 +140,12 @@ public class FishingListener implements Listener{
 									e.printStackTrace();
 								}
 							}
-							process.remove(player);
+							bar.removePlayer(player);
+							if(process.containsKey(player)) {
+								process.remove(player);
+								FishingPlugin.FishingFailed.playSound(player);
+								player.sendMessage(MessageEnum.event_Fishing_Fail.getMessage());
+							}
 						}
 					}.start();
 				}
@@ -151,13 +158,18 @@ public class FishingListener implements Listener{
 		Player player = e.getPlayer();
 		if(process.containsKey(player)) {
 			Game game = process.get(player);
+			if(game.now == game.word.length || game.failed == true) return;
 			String key = e.getKey();
-			game.now++;
-			if(!game.word[game.now].equals(key)) {
-				game.failed = true;
-				FishingPlugin.IncorrectControl.playSound(player);
-			}else {
-				FishingPlugin.CorrectControl.playSound(player);
+			if(key.equals("")) {
+				game.input = true;
+			}else if(game.input) {
+				game.input = false;
+				if(!game.word[game.now++].equals(key)) {
+					game.failed = true;
+					FishingPlugin.IncorrectControl.playSound(player);
+				}else {
+					FishingPlugin.CorrectControl.playSound(player);
+				}
 			}
 		}
 	}
@@ -166,11 +178,13 @@ public class FishingListener implements Listener{
 		String[] word;
 		int now;
 		boolean failed;
+		boolean input;
 
 		Game(int length) {
 			word = new String[length];
 			now = 0;
 			failed = false;
+			input = true;
 		}
 	}
 	

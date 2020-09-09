@@ -79,7 +79,8 @@ public class FishingPlugin extends JavaPlugin{
 	@Override
 	public void onEnable() {
 		instance = this;
-		getCommand("fihsing").setExecutor(new FPCmd());
+		loadConfig();
+		getCommand("fishing").setExecutor(new FPCmd());
 		File folder = new File(getDataFolder(), "players/");
 		if(!folder.exists()) folder.mkdirs();
 		for(File file : folder.listFiles()) {
@@ -99,7 +100,7 @@ public class FishingPlugin extends JavaPlugin{
 		PacketListener packetListener = new PacketAdapter(this, ListenerPriority.NORMAL, new PacketType[] { PacketType.Play.Client.STEER_VEHICLE }) {
 			@Override
 			public void onPacketReceiving(PacketEvent event) {
-				if(event.getPacketType() == PacketType.Play.Client.STEER_VEHICLE) {
+				if(event.getPacketType().equals(PacketType.Play.Client.STEER_VEHICLE)) {
 					PacketContainer container = event.getPacket();
 					PacketPlayInSteerVehicle packet = (PacketPlayInSteerVehicle)container.getHandle();
 					VehicleControlEvent customEvent = new VehicleControlEvent(event.getPlayer(), packet);
@@ -147,18 +148,18 @@ public class FishingPlugin extends JavaPlugin{
 			int type = (int)getValue(config, "Item." + i + ".Type", 293);
 			int durability = (int)getValue(config, "Item." + i + ".Durability", (int)i);
 			String name = ChatColor.translateAlternateColorCodes('&', (String)getValue(config, "Item." + i + ".Name", names[i-1]));
-			List<String> loreArray = (List<String>)getValueList(config, "Item.Lore", itemLores[i-1]);
+			List<String> loreArray = (List<String>)getValueList(config, "Item." + i + ".Lore", itemLores[i-1]);
 			String[] lores = new String[loreArray.size()];
 			for(int j = 0; j < loreArray.size(); j++) {
-				lores[j] = ChatColor.translateAlternateColorCodes('&', loreArray.get(i));
+				lores[j] = ChatColor.translateAlternateColorCodes('&', loreArray.get(j));
 			}
 			items[i-1] = ItemAPI.makeItem(type, 1, 0, durability, name, lores);
 			timeouts[i-1] = (double)getValue(config, "Difficulty." + i + ".TimeOut", default_timeouts[i-1]);
 			counts[i-1] = (int)getValue(config, "Difficulty." + i + ".Count", default_counts[i-1]);
 		}
-		int type = (int)getValue(config, "Item.Type", 346);
-		String name = ChatColor.translateAlternateColorCodes('&', (String)getValue(config, "Item.Name", "&f[ &a낚싯대 &f]"));
-		List<String> loreArray = (List<String>)getValueList(config, "Item.Lore", Arrays.asList("&f대나무로 만든 낚싯대이다.", "&f오늘 운수가 좋을 것만 같다!"));
+		int type = (int)getValue(config, "Item.Rod.Type", 346);
+		String name = ChatColor.translateAlternateColorCodes('&', (String)getValue(config, "Item.Rod.Name", "&f[ &a낚싯대 &f]"));
+		List<String> loreArray = (List<String>)getValueList(config, "Item.Rod.Lore", Arrays.asList("&f대나무로 만든 낚싯대이다.", "&f오늘 운수가 좋을 것만 같다!"));
 		String[] lores = new String[loreArray.size()];
 		for(int i = 0; i < loreArray.size(); i++) {
 			lores[i] = ChatColor.translateAlternateColorCodes('&', loreArray.get(i));
@@ -181,13 +182,12 @@ public class FishingPlugin extends JavaPlugin{
 			}
 		}
 		this.saveConfig();
-		String prefix = MessageEnum.info_Prefix.getMessage();
 		for(MessageEnum msgEnum : MessageEnum.values()) {
 			if(msgEnum != MessageEnum.info_Prefix && !msgEnum.name().contains("Holder")) {
 				String[] msgs = msgEnum.getMessages();
-				for(int i = 0; i < msgs.length; i++) {
-					msgs[i] = prefix + msgs[i]; 
-				}
+//				for(int i = 0; i < msgs.length; i++) {
+//					msgs[i] = prefix + msgs[i]; 
+//				}
 				msgEnum.setMessage(msgs);
 			}
 		}

@@ -7,12 +7,12 @@ import org.bukkit.event.Listener;
 
 import com.marquez.fishing.FishingPlugin;
 
-import net.citizensnpcs.api.event.NPCClickEvent;
+import net.citizensnpcs.api.event.NPCRightClickEvent;
 
 public class NPCInteractListener implements Listener{
 	
 	@EventHandler
-	public void onInteract(NPCClickEvent e) {
+	public void onInteract(NPCRightClickEvent e) {
 		if(e.getNPC().getEntity().getUniqueId().toString().equals(FishingPlugin.npc)) {
 			e.setCancelled(true);
 			Player player = e.getClicker();

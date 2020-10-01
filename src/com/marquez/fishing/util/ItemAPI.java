@@ -4,11 +4,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import net.minecraft.server.v1_12_R1.NBTTagCompound;
+
 public class ItemAPI {
 	
+	public static ItemStack unbreakable(ItemStack item) {
+		net.minecraft.server.v1_12_R1.ItemStack nms = CraftItemStack.asNMSCopy(item);
+		NBTTagCompound tag = nms.getTag();
+		tag.setBoolean("Unbreakable", true);
+		nms.setTag(tag);
+		return CraftItemStack.asCraftMirror(nms);
+	}
 	
 	@SuppressWarnings("deprecation")
 	public static ItemStack makeItem(int type, int amount, int data, int durability, String display, String... lores) {

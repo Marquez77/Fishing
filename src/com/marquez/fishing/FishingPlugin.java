@@ -155,7 +155,7 @@ public class FishingPlugin extends JavaPlugin{
 			for(int j = 0; j < loreArray.size(); j++) {
 				lores[j] = ChatColor.translateAlternateColorCodes('&', loreArray.get(j));
 			}
-			items[i-1] = ItemAPI.makeItem(type, 1, 0, durability, name, lores);
+			items[i-1] = ItemAPI.unbreakable(ItemAPI.makeItem(type, 1, 0, durability, name, lores));
 			timeouts[i-1] = (double)getValue(config, "Difficulty." + i + ".TimeOut", default_timeouts[i-1]);
 			counts[i-1] = (int)getValue(config, "Difficulty." + i + ".Count", default_counts[i-1]);
 		}

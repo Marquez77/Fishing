@@ -100,9 +100,9 @@ public class FishingListener implements Listener{
 											public void run() {
 												for(String cmd : FishingPlugin.successCommands) {
 													if(cmd.startsWith("delay!")) {
-														int delay = Integer.parseInt(cmd.replace("delay!", "").replace(" ", ""));
+														double delay = Double.parseDouble(cmd.replace("delay!", "").replace(" ", ""));
 														try {
-															Thread.sleep(delay*1000);
+															Thread.sleep((int)(delay*1000));
 														} catch (InterruptedException e) {
 															e.printStackTrace();
 														}

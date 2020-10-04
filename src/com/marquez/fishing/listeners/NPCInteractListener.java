@@ -25,9 +25,9 @@ public class NPCInteractListener implements Listener{
 					public void run() {
 						for(String cmd : FishingPlugin.endCommands) {
 							if(cmd.startsWith("delay!")) {
-								int delay = Integer.parseInt(cmd.replace("delay!", "").replace(" ", ""));
+								double delay = Double.parseDouble(cmd.replace("delay!", "").replace(" ", ""));
 								try {
-									Thread.sleep(delay*1000);
+									Thread.sleep((int)(delay*1000));
 								} catch (InterruptedException e) {
 									e.printStackTrace();
 								}

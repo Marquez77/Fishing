@@ -75,7 +75,16 @@ public class FishingListener implements Listener{
 								}
 								sb.setLength(sb.length()-1);
 								player.sendTitle(MessageEnum.event_Fishing_Title.getMessage().replace("%words%", sb.toString()), "", 0, 10, 0);
-								if(game.now == game.word.length) {
+								if(game.failed) {
+									try {
+										Thread.sleep(500);
+									} catch (InterruptedException e) {
+										e.printStackTrace();
+									}
+									process.remove(player);
+									FishingPlugin.FishingFailed.playSound(player);
+									player.sendMessage(MessageEnum.event_Fishing_Fail.getMessage());
+								}else if(game.now == game.word.length) {
 									try {
 										Thread.sleep(500);
 									} catch (InterruptedException e) {
@@ -103,15 +112,6 @@ public class FishingListener implements Listener{
 											}
 										}.start();
 									}
-								}else if(game.failed) {
-									try {
-										Thread.sleep(500);
-									} catch (InterruptedException e) {
-										e.printStackTrace();
-									}
-									process.remove(player);
-									FishingPlugin.FishingFailed.playSound(player);
-									player.sendMessage(MessageEnum.event_Fishing_Fail.getMessage());
 								}
 								try {
 									Thread.sleep(1);

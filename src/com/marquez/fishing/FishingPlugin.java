@@ -30,7 +30,6 @@ import com.marquez.fishing.enums.MessageEnum;
 import com.marquez.fishing.events.VehicleControlEvent;
 import com.marquez.fishing.listeners.DropListener;
 import com.marquez.fishing.listeners.FishingListener;
-import com.marquez.fishing.listeners.NPCInteractListener;
 import com.marquez.fishing.util.ItemAPI;
 import com.marquez.fishing.util.SoundEffect;
 
@@ -45,7 +44,7 @@ public class FishingPlugin extends JavaPlugin{
 	public static int[] counts = new int[4];
 	public static List<String> startCommands;
 	public static List<String> endCommands;
-	public static List<String> successCommands;
+//	public static List<String> successCommands;
 	public static SoundEffect FishingSnake;
 	public static SoundEffect FishingSuccess;
 	public static SoundEffect FishingFailed;
@@ -97,7 +96,7 @@ public class FishingPlugin extends JavaPlugin{
 		}
 		getServer().getPluginManager().registerEvents(new DropListener(), this);
 		getServer().getPluginManager().registerEvents(new FishingListener(), this);
-		getServer().getPluginManager().registerEvents(new NPCInteractListener(), this);
+//		getServer().getPluginManager().registerEvents(new NPCInteractListener(), this);
 		ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
 		PacketListener packetListener = new PacketAdapter(this, ListenerPriority.NORMAL, new PacketType[] { PacketType.Play.Client.STEER_VEHICLE }) {
 			@Override
@@ -141,7 +140,7 @@ public class FishingPlugin extends JavaPlugin{
 		npc = (String)getValue(config, "NPC", "");
 		startCommands = (List<String>)getValue(config, "Options.StartCommands", Arrays.asList("cmi", "delay! 5", "cmi"));
 		endCommands = (List<String>)getValue(config, "Options.EndCommands", Arrays.asList("cmi", "delay! 5", "cmi"));
-		successCommands = (List<String>)getValue(config, "Item.4.Command", Arrays.asList("cmi", "delay! 5", "cmi"));
+//		successCommands = (List<String>)getValue(config, "Item.4.Command", Arrays.asList("cmi", "delay! 5", "cmi"));
 		String[] names = new String[] { "&f[ &b문어 &f]", "&f[ &e짚신 &f]", "&d[ &c상어 &d]", "&c[ &d이무기 &c]" };
 		List<String>[] itemLores = new List[] { Arrays.asList("&f아니 민물에 문어가?!"), Arrays.asList("&f짚으로 만든", "&f평범한 짚신이다."), Arrays.asList("&f으악! 상어다.", "&f물리지 않도록 조심하자"), Arrays.asList("&f용이 되기 전의 뱀.", "&f차가운 물 속에서 1000년 동안 지내면 용으로 변한 뒤", "&f여의주와 굉음과 함께 폭풍우를 불러 하늘로 날아올라간다고 여겼다.") };
 		double[] default_timeouts = new double[] { 4, 4, 4, 4 };

@@ -96,9 +96,12 @@ public class FishingListener implements Listener{
 									FishingPlugin.FishingSuccess.playSound(player);
 									player.sendMessage(MessageEnum.event_Fishing_Success.getMessage());
 									if(index == 3) {
+										FishingPlugin.instance.addCount(player);
+										player.getInventory().removeItem(FishingPlugin.item);
+										player.getInventory().removeItem(FishingPlugin.items);
 										new Thread() {
 											public void run() {
-												for(String cmd : FishingPlugin.successCommands) {
+												for(String cmd : FishingPlugin.endCommands) {
 													if(cmd.startsWith("delay!")) {
 														double delay = Double.parseDouble(cmd.replace("delay!", "").replace(" ", ""));
 														try {
